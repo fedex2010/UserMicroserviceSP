@@ -1,17 +1,21 @@
 package com.example.demo.Models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class User {
+@Table(name = "users")
+public class User implements Serializable {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "NAME")
     private String name;
+    @Column(name = "PASSWORD")
     private String password;
+    @Column(name = "EMAIL")
     private String email;
 
     public User(String name, String password, String email) {
@@ -21,6 +25,9 @@ public class User {
         this.email = email;
     }
 
+    public User() {
+        super();
+    }
     public String getName() {
         return name;
     }
