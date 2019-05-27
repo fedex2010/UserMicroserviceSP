@@ -1,5 +1,6 @@
 package com.example.demo.Services;
 
+import com.example.demo.Exceptions.UserNotFoundException;
 import com.example.demo.Models.User;
 import com.example.demo.Repositories.UserRepository;
 import com.example.demo.Repositories.UserRepositoryI;
@@ -23,7 +24,7 @@ public class UserService {
         return (ArrayList<User>) userRepository.findAll();
     }
 
-    public Optional<User> findByMail(String mail) {
+    public User findByMail(String mail) throws UserNotFoundException {
         return userRepository.findByEmail(mail);
     }
 

@@ -3,6 +3,7 @@ package com.example.demo.Controllers;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import com.example.demo.Exceptions.UserNotFoundException;
 import com.example.demo.ModelUtils.UserJsonMapper;
 import com.example.demo.Models.User;
 import com.example.demo.Services.UserService;
@@ -24,11 +25,11 @@ public class UserController {
         return new ResponseEntity<ArrayList<User>>( userService.findAll(), HttpStatus.OK);
 	}
 
-	//CREAR NOT FOUND EXCEPTION
     @RequestMapping(value = "/{mail}",method = RequestMethod.GET)
-    public ResponseEntity getUser(@PathVariable("mail") String mail) {
-	    Optional<User> u = userService.findByMail(mail);
-        return new ResponseEntity<User>(u.get(),HttpStatus.OK);
+    public ResponseEntity getUser(@PathVariable("mail") String mail) throws UserNotFoundException {
+
+	    User u = userService.findByMail(mail);
+        return new ResponseEntity<User>(u,HttpStatus.OK);
     }
 
     @RequestMapping(value = "/",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)

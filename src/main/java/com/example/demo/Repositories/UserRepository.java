@@ -1,5 +1,6 @@
 package com.example.demo.Repositories;
 
+import com.example.demo.Exceptions.UserNotFoundException;
 import com.example.demo.Models.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
@@ -115,11 +117,17 @@ public class UserRepository implements UserRepositoryI {
         session.close();
     }
 
-    public Optional<User> findByEmail(String mail) {
+    public User findByEmail(String mail) throws UserNotFoundException {
+
         Session session = sessionFactory.openSession();
         Query query = session.createQuery("from User u where u.email = :email ");
         query.setParameter("email", mail);
 
-        return Optional.ofNullable( (User)query.getSingleResult() );
+        try{
+            Optional<User> u = Optional.ofNullable( (User)query.getSingleResult() );
+            return u.get();
+        }catch (Exception e){
+            throw new UserNotFoundException(mail);
+        }
     }
 }
