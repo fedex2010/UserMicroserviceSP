@@ -20,8 +20,8 @@ public class UserController {
     UserService userService;
 
 	@RequestMapping(value = "/",method = RequestMethod.GET)
-	public ArrayList<User> listUser() {
-		return userService.findAll();
+	public ResponseEntity<ArrayList<User>> listUser() {
+        return new ResponseEntity<ArrayList<User>>( userService.findAll(), HttpStatus.OK);
 	}
 
 	//CREAR NOT FOUND EXCEPTION

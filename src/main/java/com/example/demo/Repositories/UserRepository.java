@@ -25,7 +25,9 @@ public class UserRepository implements UserRepositoryI {
 
         Session session = sessionFactory.openSession();
         session.beginTransaction();
+
         session.save( s );
+
         session.getTransaction().commit();
         session.close();
 
