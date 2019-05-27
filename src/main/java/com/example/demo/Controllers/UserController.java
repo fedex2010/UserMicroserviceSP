@@ -1,12 +1,15 @@
 package com.example.demo.Controllers;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.example.demo.ModelUtils.UserJsonMapper;
 import com.example.demo.Models.User;
 import com.example.demo.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,27 +24,35 @@ public class UserController {
 		return userService.findAll();
 	}
 
+	//CREAR NOT FOUND EXCEPTION
     @RequestMapping(value = "/{mail}",method = RequestMethod.GET)
-    public User getUser(@PathVariable("mail") String mail) {
-        return userService.findByMail(mail);
+    public ResponseEntity getUser(@PathVariable("mail") String mail) {
+	    Optional<User> u = userService.findByMail(mail);
+        return new ResponseEntity<User>(u.get(),HttpStatus.OK);
     }
 
     @RequestMapping(value = "/",method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE)
-    public User createUser(@RequestBody UserJsonMapper userPayload) {
+    public ResponseEntity<User> createUser(@RequestBody UserJsonMapper userPayload) {
         User aUser = userPayload.toEntity();
-        return userService.create( aUser );
+        return new ResponseEntity<User>(aUser,HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/",method = RequestMethod.PUT,consumes = MediaType.APPLICATION_JSON_VALUE)
-    public User updateUser(@RequestBody UserJsonMapper userPayload) {
+    public ResponseEntity<User> updateUser(@RequestBody UserJsonMapper userPayload) {
         User aUser = userPayload.toEntity();
-        return userService.update( aUser );
+        return new ResponseEntity<User>(aUser,HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{mail}",method = RequestMethod.DELETE)
-    public User daleteUser(@PathVariable("mail") String mail) {
-	    userService.delete(mail);
-        return new User("un nombre","un pass","un emial");
+    public ResponseEntity<Void> daleteUser(@PathVariable("mail") String mail) {
+	    userService.deleteByEmail(mail);
+        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(value = "/",method = RequestMethod.DELETE)
+    public ResponseEntity<Void> daleteAll() {
+        userService.deleteALl();
+        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -22,8 +23,8 @@ public class UserService {
         return (ArrayList<User>) userRepository.findAll();
     }
 
-    public User findByMail(String mail) {
-        return new User("proabdno","proabdno","proabdno");
+    public Optional<User> findByMail(String mail) {
+        return userRepository.findByEmail(mail);
     }
 
     public User create(User newUser) {
@@ -35,6 +36,16 @@ public class UserService {
         return newUser;
     }
 
-    public void delete(String mail) {
+    public void delete(User newUser) {
+        userRepository.delete(newUser);
     }
+
+    public void deleteByEmail(String email) {
+        userRepository.deleteByEmail(email);
+    }
+
+    public void deleteALl() {
+        userRepository.deleteAll();
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.example.demo.Models;
 
+import org.springframework.stereotype.Indexed;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -11,11 +13,9 @@ public class User implements Serializable {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "NAME")
     private String name;
-    @Column(name = "PASSWORD")
     private String password;
-    @Column(name = "EMAIL")
+
     private String email;
 
     public User(String name, String password, String email) {

@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -37,6 +39,7 @@ public class UserRepository implements UserRepositoryI {
 
     @Override
     public Optional<User> findById(Long aLong) {
+
         return Optional.empty();
     }
 
@@ -89,6 +92,32 @@ public class UserRepository implements UserRepositoryI {
 
     @Override
     public void deleteAll() {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
 
+        session.createSQLQuery("truncate table users").executeUpdate();
+
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void deleteByEmail(final String email){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        Query query = session.createQuery("delete User u where u.email = :EMAIL");
+        query.setParameter("EMAIL", email);
+        query.executeUpdate();
+
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public Optional<User> findByEmail(String mail) {
+        Session session = sessionFactory.openSession();
+        Query query = session.createQuery("from User u where u.email = :email ");
+        query.setParameter("email", mail);
+
+        return Optional.ofNullable( (User)query.getSingleResult() );
     }
 }
